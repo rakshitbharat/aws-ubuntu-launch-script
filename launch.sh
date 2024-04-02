@@ -16,6 +16,12 @@ useradd -m -s /bin/bash ubuntu
 echo "ubuntu:$USER_PASSWORD" | chpasswd
 usermod -aG sudo ubuntu
 
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo sed -i 's/#PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo sed -i 's/PubkeyAuthentication yes/PubkeyAuthentication no/g' /etc/ssh/sshd_config
+sudo systemctl restart sshd
+
+
 # Install Docker and dependencies without interaction
 DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl gnupg lsb-release
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
