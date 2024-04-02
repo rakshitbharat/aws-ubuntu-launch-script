@@ -1,59 +1,70 @@
 # AWS Ubuntu Launch Script
 
-This repository contains a script designed to set up a new Ubuntu server on AWS with some essential tools and configurations. The script performs the following actions:
+This repository hosts a script designed to configure a new Ubuntu server on AWS. It automates the setup process, installing necessary tools such as Docker, Docker Compose, and the AWS CLI, and configures SSH for password-based authentication.
+
+## Features
+
 - Updates and upgrades the Ubuntu system.
-- Installs and configures SSH for password authentication.
+- Configures SSH to allow password authentication.
 - Creates a non-root user with sudo privileges.
-- Installs Docker and Docker Compose.
-- Allows the new user to run Docker commands without `sudo`.
-- Installs the AWS CLI.
-
-## Prerequisites
-
-Before you begin, ensure you have:
-- An AWS account.
-- Launched an Ubuntu LTS instance on AWS.
-- SSH access to your Ubuntu instance.
+- Installs Docker and Docker Compose, allowing commands without `sudo`.
+- Installs the AWS CLI for interacting with AWS services.
 
 ## How to Use
 
-1. **Access your Ubuntu Instance**: SSH into your Ubuntu instance using your preferred SSH client.
+### Direct Execution
 
-2. **Download the Script**: Use `wget` to download the launch script from this repository to your Ubuntu instance. Replace `launch.sh` with the name of the script file.
+To directly execute the script on an existing Ubuntu instance:
+
+1. **SSH into your Instance**: Connect to your Ubuntu instance using SSH.
+
+2. **Download the Script**: Use the following command to download the script:
 
     ```bash
     wget https://github.com/rakshitbharat/aws-ubuntu-launch-script/raw/main/launch.sh
     ```
 
-3. **Make the Script Executable**: Change the script's permissions to make it executable.
+3. **Make the Script Executable**:
 
     ```bash
     chmod +x launch.sh
     ```
 
-4. **Run the Script**: Execute the script. Remember to replace `launch.sh` with the actual script file name. You will need to enter your sudo password.
+4. **Run the Script**: Execute the script with sudo:
 
     ```bash
     sudo ./launch.sh
     ```
 
+### Automated Setup Using EC2 User Data
+
+For a hands-off setup when launching a new EC2 instance, you can use this script as part of the EC2 user data.
+
+1. **Prepare User Data**: Copy the following script into the user data text box in the EC2 launch wizard:
+
+    ```bash
+    #!/bin/bash
+    wget https://github.com/rakshitbharat/aws-ubuntu-launch-script/raw/main/launch.sh
+    chmod +x launch.sh
+    sudo ./launch.sh
+    ```
+
+2. **Launch the Instance**: Proceed with the instance setup in the AWS Management Console. In the **Configure Instance** step, paste the above script into the **User Data** section under **Advanced Details**.
+
+This will execute the script automatically upon instance initialization, configuring everything without further manual intervention.
+
 ## Customization
 
-The script contains a placeholder for setting the SSH user password. Before running the script, you can edit it to set a custom password:
-
-- Open the script in a text editor.
-- Locate the `USER_PASSWORD="YourPasswordHere"` line.
-- Replace `YourPasswordHere` with your desired password.
+Before using the script, you can customize the default SSH user password by editing the script. Locate the `USER_PASSWORD="YourPasswordHere"` line and replace `"YourPasswordHere"` with your desired password.
 
 ## Security Notice
 
-- The script sets SSH to allow password authentication. After you have set up your server, consider configuring SSH key-based authentication for enhanced security.
-- Ensure you understand the security implications of enabling password authentication over SSH and take appropriate measures to secure your server.
+The script configures SSH to permit password authentication. Consider using SSH key-based authentication for better security once the server is set up. Ensure you understand the implications of enabling password authentication over SSH.
 
 ## Contributions
 
-Contributions are welcome! If you have improvements or bug fixes, please open a pull request.
+Contributions to improve the script or documentation are welcome. Please feel free to fork the repository, make changes, and submit a pull request.
 
 ## License
 
-This script is provided under the MIT License. See the LICENSE file for more details.
+This script and documentation are made available under the MIT License. See the LICENSE file in the repository for full details.
